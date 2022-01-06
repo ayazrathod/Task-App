@@ -1,8 +1,7 @@
+import {Form,Modal,DatePicker,Input} from 'antd';
 import React,{useState, useEffect} from 'react';
-import { Form,Input,DatePicker, Modal} from 'antd';
-import ListBody from 'antd/lib/transfer/ListBody';
 
-const TaskModal = ({show,setShowModal,onSubmit}) => {
+const EditForm = ({show,setShowModal,onSubmit}) => {
     console.log(show)
     const[loading,setLoading] = useState(false);
     const[taskName, setTaskName] = useState('');
@@ -34,6 +33,13 @@ const TaskModal = ({show,setShowModal,onSubmit}) => {
 
   const onSubmitPress = () => {
       onSubmit({taskName, description, dueDate})
+      clearData()
+  }
+
+  const clearData = () =>{
+      setTaskName('')
+      setDescription('')
+      setDueDate('')
   }
 
   const setDate = (dateString) => {
@@ -100,4 +106,4 @@ const TaskModal = ({show,setShowModal,onSubmit}) => {
   )
 }
 
-export default TaskModal;
+export default EditForm;

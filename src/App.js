@@ -3,10 +3,12 @@ import { v4 as uuidv4} from 'uuid';
 import React, { useState } from 'react';
 import Task from './Task';
 import TaskModal from './TaskModal';
+import EditForm from './EditForm';
 import "antd/dist/antd.css";
 function App() {
   const[cards, updateCards] = useState([]);
   const[showModal, setShowModal] = useState(false);
+  const[isEditing,setIsEditing] = useState(false);
   const handleClick = (taskName, description, dueDate) => {
     setShowModal(!showModal)
     
@@ -15,11 +17,23 @@ function App() {
     const updatedTasks = cards.filter(card => card.id !== id)
     updateCards(updatedTasks)
   }
+
+  const editTask = (id) =>{
+    setShowModal(true)
+    setIsEditing(true)
+    // const editUpdatedTask = cards.filter(card => card.id != id)
+    // updateCards(editUpdatedTask)
+    console.log(id)
+  }
   const onSubmit = ({id,taskName, description, dueDate}) => {
     // console.log(values)
     // console.log(taskName)
     //console.log(description)
     //console.log(dueDate)
+    if (isEditing) {
+      const editedTask = cards.filter(card => card.id === id)
+      console.log()
+    }
     const newCards = [...cards, {id: uuidv4(),taskName, description, dueDate}]
     const compareDueDate = (card1, card2) =>{
       const dueDate1 = new Date(card1.dueDate)
@@ -56,6 +70,7 @@ function App() {
                 description={card.description}
                 dueDate={card.dueDate}
                 deleteTask={onDelete}
+                editTask={editTask}
               />
             )
             
@@ -63,6 +78,7 @@ function App() {
         </Col>
       
         <TaskModal show = {showModal} setShowModal={setShowModal} onSubmit={onSubmit}/> 
+        <EditForm show = {showModal} setShowModal={setShowModal} onSubmit={onSubmit}/> 
         <Col span ={6} style = {{"backgroundColor" : "#EAECEE"}}>
           
           </Col>
