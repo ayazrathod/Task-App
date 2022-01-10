@@ -2,12 +2,12 @@ import React,{useState, useEffect} from 'react';
 import { Form,Input,DatePicker, Modal} from 'antd';
 import ListBody from 'antd/lib/transfer/ListBody';
 
-const TaskModal = ({show,setShowModal,onSubmit}) => {
-    console.log(show)
+const TaskModal = ({show,setShowModal,onSubmit,task}) => {
+    console.log(task)
     const[loading,setLoading] = useState(false);
-    const[taskName, setTaskName] = useState('');
-    const[description, setDescription] = useState('');
-    const[dueDate, setDueDate]= useState('');
+    const[taskName, setTaskName] = useState(task.taskName);
+    const[description, setDescription] = useState(task.description);
+    const[dueDate, setDueDate]= useState(task.dueDate);
  
   const handleOk = () => {
     setLoading(true);
@@ -22,7 +22,7 @@ const TaskModal = ({show,setShowModal,onSubmit}) => {
   };
   useEffect(()=>{
       setShowModal(show)
-  },[show,setShowModal])
+  },[show])
 
   // const onSubmit = (values) => {
    // console.log('Success:', values);

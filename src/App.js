@@ -9,32 +9,39 @@ function App() {
   const[cards, updateCards] = useState([]);
   const[showModal, setShowModal] = useState(false);
   const[isEditing,setIsEditing] = useState(false);
+  const[taskToEdit,setTaskToEdit] = useState({});
   const handleClick = (taskName, description, dueDate) => {
     setShowModal(!showModal)
     
   }
   const onDelete = (id) => {
     const updatedTasks = cards.filter(card => card.id !== id)
+    console.log(updatedTasks)
     updateCards(updatedTasks)
   }
 
-  const editTask = (id) =>{
+  const editTask = ({id}) =>{
+    const editedTask = cards.filter(card => card.id === id)
+    setTaskToEdit(editedTask[0])
     setShowModal(true)
     setIsEditing(true)
     // const editUpdatedTask = cards.filter(card => card.id != id)
     // updateCards(editUpdatedTask)
-    console.log(id)
+    //console.log(id,taskName,description,dueDate)
   }
   const onSubmit = ({id,taskName, description, dueDate}) => {
+    console.log(isEditing)
     // console.log(values)
     // console.log(taskName)
     //console.log(description)
     //console.log(dueDate)
+    console.log(id,taskName,description,dueDate)
+    dueDate= dueDate.toString()
     if (isEditing) {
-      const editedTask = cards.filter(card => card.id === id)
-      console.log()
+      console.log(id)
+      console.log(cards)
     }
-    const newCards = [...cards, {id: uuidv4(),taskName, description, dueDate}]
+     const newCards = [...cards, {id: uuidv4(),taskName, description, dueDate}]
     const compareDueDate = (card1, card2) =>{
       const dueDate1 = new Date(card1.dueDate)
       const dueDate2 = new Date(card2.dueDate)
@@ -77,8 +84,8 @@ function App() {
           }
         </Col>
       
-        <TaskModal show = {showModal} setShowModal={setShowModal} onSubmit={onSubmit}/> 
-        <EditForm show = {showModal} setShowModal={setShowModal} onSubmit={onSubmit}/> 
+        <TaskModal show = {showModal} setShowModal={setShowModal} task ={taskToEdit} onSubmit={onSubmit}/> 
+        {/* <EditForm show = {showModal} setShowModal={setShowModal} onSubmit={onSubmit}/>  */}
         <Col span ={6} style = {{"backgroundColor" : "#EAECEE"}}>
           
           </Col>

@@ -3,10 +3,8 @@ import React,{useState, useEffect} from 'react';
 
 const EditForm = ({show,setShowModal,onSubmit}) => {
     console.log(show)
+    const [form] = Form.useForm();
     const[loading,setLoading] = useState(false);
-    const[taskName, setTaskName] = useState('');
-    const[description, setDescription] = useState('');
-    const[dueDate, setDueDate]= useState('');
  
   const handleOk = () => {
     setLoading(true);
@@ -32,20 +30,13 @@ const EditForm = ({show,setShowModal,onSubmit}) => {
   };
 
   const onSubmitPress = () => {
-      onSubmit({taskName, description, dueDate})
+      console.log(form.getFieldsValue(true))
+      onSubmit(form.getFieldsValue(true))
       clearData()
   }
 
   const clearData = () =>{
-      setTaskName('')
-      setDescription('')
-      setDueDate('')
-  }
-
-  const setDate = (dateString) => {
-      //console.log(date)
-      console.log(dateString)
-      //setDueDate(dateString)
+      form.setFieldsValue({taskName: '', description: '', dueDate: ''})
   }
 
   return (
@@ -60,6 +51,7 @@ const EditForm = ({show,setShowModal,onSubmit}) => {
         >
     <Form
       layout="horizontal"
+      form={form}
       
       // onFinish={onSubmit}
       //    onFinishFailed={onSubmitFailed}
@@ -74,7 +66,7 @@ const EditForm = ({show,setShowModal,onSubmit}) => {
           },
         ]}
       >
-        <Input onChange={(e) => setTaskName(e.target.value)} />
+        <Input />
       </Form.Item>
 
       <Form.Item
@@ -87,7 +79,7 @@ const EditForm = ({show,setShowModal,onSubmit}) => {
           },
         ]}
       >
-        <Input onChange={(e) => setDescription(e.target.value)}/>
+        <Input />
       </Form.Item>
       <Form.Item label="Due Date"
                   name="dueDate"
@@ -97,7 +89,7 @@ const EditForm = ({show,setShowModal,onSubmit}) => {
                       message: 'Please enter due date!',
                     },
                   ]}>
-        <DatePicker onChange={(date, dateString) => setDueDate(dateString)} />
+        <DatePicker />
       </Form.Item>
     </Form>
           
