@@ -7,7 +7,7 @@ const Task=({id, taskName, description, dueDate,deleteTask,editTask}) => {
           <Card title = "Tasks"  id= {id} >
               <p>{taskName}</p>
               <p>{description}</p>
-              <p>{dueDate}</p>
+              <p>{dueDate.toString()}</p>
               <Button onClick={() => deleteTask(id)}>Delete</Button>
               <Button onClick={() => editTask({id})}>Edit</Button>
             </Card>

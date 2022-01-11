@@ -8,10 +8,14 @@ import "antd/dist/antd.css";
 function App() {
   const[cards, updateCards] = useState([]);
   const[showModal, setShowModal] = useState(false);
-  const[isEditing,setIsEditing] = useState(false);
   const[taskToEdit,setTaskToEdit] = useState({});
   const handleClick = (taskName, description, dueDate) => {
-    setShowModal(!showModal)
+    setTaskToEdit({})
+    setTimeout(() => {
+      setShowModal(!showModal);
+   }, 500);
+
+    //setShowModal(!showModal)
     
   }
   const onDelete = (id) => {
@@ -24,40 +28,65 @@ function App() {
     const editedTask = cards.filter(card => card.id === id)
     setTaskToEdit(editedTask[0])
     setShowModal(true)
-    setIsEditing(true)
     // const editUpdatedTask = cards.filter(card => card.id != id)
     // updateCards(editUpdatedTask)
     //console.log(id,taskName,description,dueDate)
   }
-  const onSubmit = ({id,taskName, description, dueDate}) => {
-    console.log(isEditing)
-    // console.log(values)
-    // console.log(taskName)
-    //console.log(description)
-    //console.log(dueDate)
-    console.log(id,taskName,description,dueDate)
-    dueDate= dueDate.toString()
-    if (isEditing) {
-      console.log(id)
-      console.log(cards)
+  const getEditIndex = (id, cards) => {
+    if (id === null)
+      return -1
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i]
+       if (card.id === id) {
+          return i
+       }
     }
-     const newCards = [...cards, {id: uuidv4(),taskName, description, dueDate}]
-    const compareDueDate = (card1, card2) =>{
-      const dueDate1 = new Date(card1.dueDate)
-      const dueDate2 = new Date(card2.dueDate)
-        if (dueDate1 < dueDate2){
-          return -1
-        }
-        else if (dueDate2 > dueDate1){
-          return 1
-        }
-        else 
-          return 0
+    return -1
+ };
+
+ const compareDueDates = (card1, card2) =>{
+  const dueDate1 = new Date(card1.dueDate)
+  const dueDate2 = new Date(card2.dueDate)
+    if (dueDate1 < dueDate2){
+      return -1
     }
-    newCards.sort(compareDueDate);
-    updateCards(newCards)
-    setShowModal(!showModal)
-  }
+    else if (dueDate2 > dueDate1){
+      return 1
+    }
+    else 
+      return 0
+}
+  const onSubmit = ({id, taskName, description, dueDate}) => {
+    // dueDate = dueDate.toString();
+    const newCards = [...cards];
+    const editIndex = getEditIndex(id, newCards);
+    if (editIndex >= 0) {  
+       newCards[editIndex] = {id, taskName, description, dueDate};
+    } else {
+       newCards.push({id: uuidv4(), taskName, description, dueDate});
+    }
+    newCards.sort(compareDueDates);
+    updateCards(newCards);
+    setShowModal(!showModal);
+}
+  // const onSubmit = ({id,taskName, description, dueDate}) => {
+  //   console.log(isEditing)
+  //   // console.log(values)
+  //   // console.log(taskName)
+  //   //console.log(description)
+  //   //console.log(dueDate)
+  //   console.log(id,taskName,description,dueDate)
+  //   dueDate= dueDate.toString()
+  //   if (isEditing) {
+  //     console.log(id)
+  //     console.log(cards)
+  //   }
+  //    const newCards = [...cards, {id: uuidv4(),taskName, description, dueDate}]
+  //   newCards.sort(compareDueDate);
+  //   updateCards(newCards)
+  //   setShowModal(!showModal)
+  // }
+
 
   return (
     <div className="App">
@@ -85,7 +114,7 @@ function App() {
         </Col>
       
         <TaskModal show = {showModal} setShowModal={setShowModal} task ={taskToEdit} onSubmit={onSubmit}/> 
-        {/* <EditForm show = {showModal} setShowModal={setShowModal} onSubmit={onSubmit}/>  */}
+        {/* { <EditForm show = {showModal} setShowModal={setShowModal} onSubmit={onSubmit}/> } */}
         <Col span ={6} style = {{"backgroundColor" : "#EAECEE"}}>
           
           </Col>

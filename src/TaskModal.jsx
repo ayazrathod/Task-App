@@ -1,13 +1,15 @@
 import React,{useState, useEffect} from 'react';
 import { Form,Input,DatePicker, Modal} from 'antd';
 import ListBody from 'antd/lib/transfer/ListBody';
+import FormContext from 'rc-field-form/es/FormContext';
 
 const TaskModal = ({show,setShowModal,onSubmit,task}) => {
     console.log(task)
+    const [form] = Form.useForm();
     const[loading,setLoading] = useState(false);
-    const[taskName, setTaskName] = useState(task.taskName);
-    const[description, setDescription] = useState(task.description);
-    const[dueDate, setDueDate]= useState(task.dueDate);
+    // const[taskName, setTaskName] = useState(task.taskName);
+    // const[description, setDescription] = useState(task.description);
+    // const[dueDate, setDueDate]= useState(task.dueDate);
  
   const handleOk = () => {
     setLoading(true);
@@ -18,11 +20,20 @@ const TaskModal = ({show,setShowModal,onSubmit,task}) => {
   };
 
   const handleCancel = () => {
+    
+    form.resetFields()
     setShowModal(false);
   };
   useEffect(()=>{
       setShowModal(show)
   },[show])
+
+  useEffect(() => {
+    form.setFieldsValue({taskName:task.taskName});
+    form.setFieldsValue({description:task.description});
+    form.setFieldsValue({dueDate:task.dueDate});
+  },[task])
+  
 
   // const onSubmit = (values) => {
    // console.log('Success:', values);
@@ -33,7 +44,10 @@ const TaskModal = ({show,setShowModal,onSubmit,task}) => {
   };
 
   const onSubmitPress = () => {
-      onSubmit({taskName, description, dueDate})
+      console.log(form.values)
+      const id = task.hasOwnProperty('id') ? task.id: null;
+      onSubmit({id, ...form.getFieldValue()})
+      form.resetFields()
   }
 
   const setDate = (dateString) => {
@@ -52,7 +66,7 @@ const TaskModal = ({show,setShowModal,onSubmit,task}) => {
           onCancel={handleCancel}
 
         >
-    <Form
+    <Form form={form}
       layout="horizontal"
       
       // onFinish={onSubmit}
@@ -68,7 +82,7 @@ const TaskModal = ({show,setShowModal,onSubmit,task}) => {
           },
         ]}
       >
-        <Input onChange={(e) => setTaskName(e.target.value)} />
+        <Input onChange={(e) => form.setFieldsValue({taskName:e.target.value})} />
       </Form.Item>
 
       <Form.Item
@@ -81,7 +95,7 @@ const TaskModal = ({show,setShowModal,onSubmit,task}) => {
           },
         ]}
       >
-        <Input onChange={(e) => setDescription(e.target.value)}/>
+        <Input onChange={(e) => form.setFieldsValue({description:e.target.value})}/>
       </Form.Item>
       <Form.Item label="Due Date"
                   name="dueDate"
@@ -91,7 +105,7 @@ const TaskModal = ({show,setShowModal,onSubmit,task}) => {
                       message: 'Please enter due date!',
                     },
                   ]}>
-        <DatePicker onChange={(date, dateString) => setDueDate(dateString)} />
+        <DatePicker onChange={(date, dateString) => form.setFieldsValue({dueDate:date})} />
       </Form.Item>
     </Form>
           
